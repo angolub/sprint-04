@@ -47,6 +47,7 @@ public class FAQSectionTest {
         WebDriverManager.chromedriver().setup();
     }
 
+    //Проверяет ответы на вопросы
     @Test
     public void checkFAQAnswerTest() {
         driver = new ChromeDriver();

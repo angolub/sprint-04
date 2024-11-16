@@ -24,7 +24,6 @@ public class OrderTest {
     private final int rentalPeriodIndex;
     private final String color;
     private final String comment;
-    //private final String expectedResult = "Хотите оформить заказ?";
     private final String expectedResult = "Заказ оформлен";
 
     public OrderTest(
@@ -76,7 +75,7 @@ public class OrderTest {
                 },
                 {
                         "ДлинныйдлинныйД",
-                        "Длинныйдлинныйдлинныйдлинныйдлинныйдлинныйдлинныйдлинныйдлинный",
+                        "ДлинныйдлинныйдлинныйдлинныйдлинныйдлинныйдлинныйдлинныйдлинныйД",
                         "Длинныйдлинныйдлинныйдлинныйдлинныйдлинныйдлинный",
                         "1111111111144",
                         224,
@@ -104,6 +103,7 @@ public class OrderTest {
         WebDriverManager.chromedriver().setup();
     }
 
+    //Проверяет положительный сценарий заказа с кнопки в хидере
     @Test
     public void checkOrderWorkflowFromHeader() {
         // драйвер для браузера Chrome
@@ -124,12 +124,13 @@ public class OrderTest {
         assertEquals(expectedResult, actual);
     }
 
+    //Проверяет положительный сценарий заказа с кнопки на главной странице
     @Test
     public void checkOrderWorkflowFromMiddle() {
         driver = new ChromeDriver();
         driver.get("https://qa-scooter.praktikum-services.ru/");
         MainPage mainPage = new MainPage(driver);
-        String actual = mainPage.makeOrderFromHeader(
+        String actual = mainPage.makeOrderFromMiddle(
                 name,
                 surname,
                 address,

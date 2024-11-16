@@ -9,37 +9,46 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
-public class FirstOrderBasePage extends OrderBasePage {
+//Первая форма заказа самоката
+public class FirstOrderPage extends OrderBasePage {
 
+    @FindBy(className = "Order_Header__BZXOb")
+    private WebElement header; //Заголовок окна
     @FindBy(xpath = ".//input[@placeholder='* Имя']")
-    private WebElement nameInput;
+    private WebElement nameInput; //Поле Имя
     @FindBy(xpath = ".//input[@placeholder='* Фамилия']")
-    private WebElement surnameInput;
+    private WebElement surnameInput; //Поле Фамилия
     @FindBy(xpath = ".//input[@placeholder='* Адрес: куда привезти заказ']")
-    private WebElement addressInput;
+    private WebElement addressInput; //Поле Адрес
     @FindBy(xpath = ".//input[@placeholder='* Телефон: на него позвонит курьер']")
-    private WebElement phoneInput;
+    private WebElement phoneInput; //Поле Телефон
 
     @FindBy(xpath = ".//button[@class='Button_Button__ra12g Button_Middle__1CSJM' and text()='Далее']")
-    private WebElement submitButton;
+    private WebElement submitButton; //Кнопка Далее
 
+    //Локаторы для станции метро
     private final String metroStationButtonXpath = ".//input[@placeholder='* Станция метро']/parent::div";
-    private final String metroStationDropdownXpath = ".//div[@class='select-search__select']";
-    private final String metroStationListXpath = "/ul";
+    private final String metroStationDropdownXpath = ".//div[@class='select-search has-focus']/div[@class='select-search__select']/ul";
     private final String metroStationItemXpath = "/li";
 
-    public FirstOrderBasePage(WebDriver driver) {
-        super(driver);
+    public FirstOrderPage(WebDriver driver, OrderBasePage nextPage) {
+        super(driver, nextPage);
     }
 
+    //Выбор станции метро по индексу
     private void selectMetroStation(int metroStationIndex) {
-        driver.findElement(By.xpath(metroStationButtonXpath)).click();
-        By stationListLocator = By.xpath(metroStationDropdownXpath.concat(metroStationListXpath));
-        new WebDriverWait(driver, 6).until(ExpectedConditions.visibilityOfElementLocated(stationListLocator));
-        List<WebElement> items = driver.findElements(By.xpath(metroStationDropdownXpath.concat(metroStationListXpath).concat(metroStationItemXpath)));
-        items.get(metroStationIndex).click();
+        if (metroStationIndex >= 0) {
+            driver.findElement(By.xpath(metroStationButtonXpath)).click();
+            By stationListLocator = By.xpath(metroStationDropdownXpath);
+            new WebDriverWait(driver, 3).until(ExpectedConditions.presenceOfElementLocated(stationListLocator));
+            List<WebElement> items = driver.findElements(By.xpath(metroStationDropdownXpath.concat(metroStationItemXpath)));
+            if (!items.isEmpty()) {
+                items.get(metroStationIndex).click();
+            }
+        }
     }
 
+    //Заполнение формы
     @Override
     protected void fillForm(String name,
                             String surname,
@@ -65,22 +74,15 @@ public class FirstOrderBasePage extends OrderBasePage {
         selectMetroStation(metroStationIndex);
     }
 
+    //Нажатие на кнопку Далее
     @Override
     protected void clickSubmitButton() {
         submitButton.click();
     }
 
+    //Получение заголовка окна
     @Override
-    protected String goToNextStep(String name,
-                                  String surname,
-                                  String address,
-                                  String phone,
-                                  int metroStationIndex,
-                                  int deliveryDay,
-                                  int rentalPeriodIndex,
-                                  String color,
-                                  String comment) {
-        SecondOrderBasePage page = new SecondOrderBasePage(driver);
-        return page.makeOrder(name, surname, address, phone, metroStationIndex, deliveryDay, rentalPeriodIndex, color, comment);
+    protected String getHeaderText() {
+        return header.getText();
     }
 }

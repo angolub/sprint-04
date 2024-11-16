@@ -20,6 +20,9 @@ public class FAQSection extends BasePage{
     public FAQSection(WebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);
+
+        CookieSection cookieSection = new CookieSection(driver);
+        cookieSection.acceptCookie();
     }
 
     private void scrollToSection(){
