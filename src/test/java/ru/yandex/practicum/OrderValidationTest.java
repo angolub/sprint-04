@@ -1,23 +1,15 @@
 package ru.yandex.practicum;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import ru.yandex.practicum.scooter.MainPage;
 
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
-public class OrderValidationTest {
-    private WebDriver driver;
-    private final String scooterURL = "https://qa-scooter.praktikum-services.ru/";
-
+public class OrderValidationTest extends BaseTest {
     private final int deep;
     private final String name;
     private final String surname;
@@ -246,7 +238,7 @@ public class OrderValidationTest {
         };
     }
 
-    //Возвоащает ожидаемый хидер в зависимости от глубины прохождения по формам заказа
+    //Возвращает ожидаемый хидер в зависимости от глубины прохождения по формам заказа
     private String getExpectedHeader(int deep) {
         if (deep == 0) {
             return "Для кого самокат";
@@ -257,17 +249,11 @@ public class OrderValidationTest {
         return null;
     }
 
-    @Before
-    public void startUp() {
-        WebDriverManager.chromedriver().setup();
-    }
-
     //Проверяет валидацию форм заказа
     @Test
     public void checkOrderValidation() {
         // драйвер для браузера Chrome
-        driver = new ChromeDriver();
-        driver.get("https://qa-scooter.praktikum-services.ru/");
+        initWebDriver();
 
         MainPage mainPage = new MainPage(driver);
         String actual = mainPage.checkValidationOrderForm(
@@ -284,10 +270,5 @@ public class OrderValidationTest {
         );
         String expected = getExpectedHeader(deep);
         assertEquals(expected, actual);
-    }
-
-    @After
-    public void teardown() {
-        driver.quit();
     }
 }

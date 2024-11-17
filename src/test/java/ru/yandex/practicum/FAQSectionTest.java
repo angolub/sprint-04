@@ -1,20 +1,13 @@
 package ru.yandex.practicum;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import ru.yandex.practicum.scooter.FAQSection;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
-public class FAQSectionTest {
-    private WebDriver driver;
-    private final String scooterURL = "https://qa-scooter.praktikum-services.ru/";
+public class FAQSectionTest extends  BaseTest {
 
     private final int questionIndex;
     private final String expectedAnswer;
@@ -42,23 +35,13 @@ public class FAQSectionTest {
         };
     }
 
-    @Before
-    public void startUp() {
-        WebDriverManager.chromedriver().setup();
-    }
-
     //Проверяет ответы на вопросы
     @Test
     public void checkFAQAnswerTest() {
-        driver = new ChromeDriver();
-        driver.get(scooterURL);
+        initWebDriver();
+
         FAQSection faqSection = new FAQSection(driver);
         String actualAnswer = faqSection.getAnswerText(questionIndex);
         assertEquals("Ответ на вопрос не совпадает с требуемым", expectedAnswer, actualAnswer);
-    }
-
-    @After
-    public void teardown() {
-        driver.quit();
     }
 }

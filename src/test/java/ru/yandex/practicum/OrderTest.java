@@ -1,20 +1,13 @@
 package ru.yandex.practicum;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import ru.yandex.practicum.scooter.MainPage;
 
 @RunWith(Parameterized.class)
-public class OrderTest {
-    private WebDriver driver;
-    private final String scooterURL = "https://qa-scooter.praktikum-services.ru/";
-
+public class OrderTest extends  BaseTest {
     private final String name;
     private final String surname;
     private final String address;
@@ -98,17 +91,12 @@ public class OrderTest {
         };
     }
 
-    @Before
-    public void startUp() {
-        WebDriverManager.chromedriver().setup();
-    }
-
     //Проверяет положительный сценарий заказа с кнопки в хидере
     @Test
     public void checkOrderWorkflowFromHeader() {
         // драйвер для браузера Chrome
-        driver = new ChromeDriver();
-        driver.get("https://qa-scooter.praktikum-services.ru/");
+        initWebDriver();
+
         MainPage mainPage = new MainPage(driver);
         String actual = mainPage.makeOrderFromHeader(
                 name,
@@ -127,8 +115,8 @@ public class OrderTest {
     //Проверяет положительный сценарий заказа с кнопки на главной странице
     @Test
     public void checkOrderWorkflowFromMiddle() {
-        driver = new ChromeDriver();
-        driver.get("https://qa-scooter.praktikum-services.ru/");
+        initWebDriver();
+
         MainPage mainPage = new MainPage(driver);
         String actual = mainPage.makeOrderFromMiddle(
                 name,
@@ -142,10 +130,5 @@ public class OrderTest {
                 comment
         );
         assertEquals(expectedResult, actual);
-    }
-
-    @After
-    public void teardown() {
-        driver.quit();
     }
 }
